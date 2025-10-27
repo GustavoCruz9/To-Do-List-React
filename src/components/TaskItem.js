@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FiTrash2 } from 'react-icons/fi';
 
 const Item = styled.li`
   padding: 12px 16px;
@@ -30,16 +31,17 @@ const Title = styled.span`
 `;
 
 const RemoveButton = styled.button`
-  background: #ff6b81;
-  color: white;
+  background: none;
   border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
   cursor: pointer;
-  font-weight: bold;
-  transition: all 1s ease;
+  color: #ff6b81;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
   &:hover {
-    background: #e0556f;
+    color: #e0556f;
   }
 `;
 
@@ -50,7 +52,9 @@ export default function TaskItem({ task, toggleDone, deleteTask }) {
         <input type="checkbox" checked={!!task.completed} onChange={() => toggleDone(task)} />
         <Title completed={task.completed}>{task.title}</Title>
       </Left>
-      <RemoveButton onClick={() => deleteTask(task.id)}>Remover</RemoveButton>
+      <RemoveButton onClick={() => deleteTask(task.id)}>
+        <FiTrash2 />
+      </RemoveButton>
     </Item>
   );
 }
