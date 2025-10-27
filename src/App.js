@@ -29,7 +29,7 @@ const Title = styled.h1`
   font-size: 36px;
   font-weight: 600;
   margin-bottom: 25px;
-  color: Black;
+  color: black;
 `;
 
 const Form = styled.form`
@@ -57,7 +57,7 @@ const Button = styled.button`
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 1s ease;
+  transition: all 0.3s ease;
   &:hover {
     background: #218026ff;
   }
@@ -74,7 +74,7 @@ function App() {
     setLoading(true);
     const res = await fetch(`${API}/tasks`);
     const data = await res.json();
-    setTasks(data);
+    setTasks(sortTasks(data));
     setLoading(false);
   }
 
@@ -87,7 +87,7 @@ function App() {
       body: JSON.stringify({ title })
     });
     const newTask = await res.json();
-    setTasks(prev => [newTask, ...prev]);
+    setTasks(prev => sortTasks([newTask, ...prev]));
     setTitle('');
   }
 
@@ -98,12 +98,19 @@ function App() {
       body: JSON.stringify({ completed: task.completed ? 0 : 1 })
     });
     const updated = await res.json();
-    setTasks(prev => prev.map(t => (t.id === updated.id ? updated : t)));
+    setTasks(prev => sortTasks(prev.map(t => (t.id === updated.id ? updated : t))));
   }
 
   async function deleteTask(id) {
     await fetch(`${API}/tasks/${id}`, { method: 'DELETE' });
     setTasks(prev => prev.filter(t => t.id !== id));
+  }
+
+  // Função para ordenar tarefas: pendentes primeiro, concluídas depois
+  function sortTasks(taskArray) {
+    const pending = taskArray.filter(t => !t.completed);
+    const completed = taskArray.filter(t => t.completed);
+    return [...pending, ...completed];
   }
 
   return (

@@ -1,21 +1,17 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { FiTrash2 } from 'react-icons/fi';
 
-const Item = styled.li`
+const Item = styled(motion.li)`
   padding: 12px 16px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   background: #ffe6c0ff;
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transition: all 0.8s ease;
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  }
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 `;
 
 const Left = styled.div`
@@ -25,7 +21,8 @@ const Left = styled.div`
 
 const Title = styled.span`
   margin-left: 12px;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 500;
   color: ${props => (props.completed ? '#aaa' : 'black')};
   text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
 `;
@@ -36,10 +33,6 @@ const RemoveButton = styled.button`
   cursor: pointer;
   color: #ff6b81;
   font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s ease;
   &:hover {
     color: #e0556f;
   }
@@ -47,9 +40,19 @@ const RemoveButton = styled.button`
 
 export default function TaskItem({ task, toggleDone, deleteTask }) {
   return (
-    <Item>
+    <Item
+      layout
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 30 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+    >
       <Left>
-        <input type="checkbox" checked={!!task.completed} onChange={() => toggleDone(task)} />
+        <input
+          type="checkbox"
+          checked={!!task.completed}
+          onChange={() => toggleDone(task)}
+        />
         <Title completed={task.completed}>{task.title}</Title>
       </Left>
       <RemoveButton onClick={() => deleteTask(task.id)}>
